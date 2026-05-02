@@ -48,14 +48,18 @@ class _ContadorPageState extends State<ContadorPage> {
     // ═══════════════════════════════════════════════════
     //  BUG #1: ¿Estamos incrementando correctamente?
     // ═══════════════════════════════════════════════════
-    contadorGuardado = contadorGuardado + 0;
+    // Incrementar en 1 cada vez que se abre la app
+    contadorGuardado = contadorGuardado + 1;
 
     setState(() {
       _contador = contadorGuardado;
       _cargando = false;
     });
 
-    debugPrint('DEBUG: Valor leído: $contadorGuardado');
+    // Guardar inmediatamente el nuevo valor (esperando a que termine)
+    await prefs.setInt('contador', contadorGuardado);
+
+    debugPrint('DEBUG: Valor leído y guardado: $contadorGuardado');
   }
 
   Future<void> _guardarContador() async {
@@ -64,7 +68,7 @@ class _ContadorPageState extends State<ContadorPage> {
     // ═══════════════════════════════════════════════════
     // BUG #2: ¿Se guardan realmente los datos?
     // ═══════════════════════════════════════════════════
-    prefs.setInt('contador', _contador);
+    await prefs.setInt('contador', _contador);
   }
 
   Future<void> _reiniciarContador() async {
@@ -73,7 +77,7 @@ class _ContadorPageState extends State<ContadorPage> {
     // ═══════════════════════════════════════════════════
     // BUG #3: ¿Esto reinicia correctamente?
     // ═══════════════════════════════════════════════════
-    prefs.setInt('contador', 0);
+    await prefs.setInt('contador', 0);
 
     setState(() {
       _contador = 0;
